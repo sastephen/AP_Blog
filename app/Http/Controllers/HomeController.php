@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\storePostRequest;
+use App\Mail\PostCreated;
+use App\Mail\PostStored;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -14,9 +18,15 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        // Mail::raw('plain text message', function ($message) {
+        //     $message->to('stp22800@gmail.com', 'Stephen');
+        //     $message->subject('Subject');
+        // });
+
         $data = Post::where('user_id', auth()->id())->latest()->get();
+
         return view('home',compact('data'));
     }
 
@@ -51,9 +61,11 @@ class HomeController extends Controller
         // ]);
 
         $validated =$request->validated();
-        Post::create($validated);
+        $post = Post::create($validated + ['user_id'=>Auth::user()->id]);
 
-        return redirect('/posts');
+        
+
+        return redirect('/posts')->with('status', config('aprogrammer.message.created'));
     }
 
     /**
