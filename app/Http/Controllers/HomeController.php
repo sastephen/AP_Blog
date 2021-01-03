@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\storePostRequest;
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $data = Post::latest()->get();
+        $data = Post::where('user_id', auth()->id())->latest()->get();
         return view('home',compact('data'));
     }
 
@@ -26,7 +27,8 @@ class HomeController extends Controller
      */
     public function create()
     {
-        return view('create');
+        $categories = Category::all();
+        return view('create',compact('categories'));
     }
 
     /**
@@ -42,10 +44,14 @@ class HomeController extends Controller
         // $post->description = $request->description;
         // $post->save();
 
-        Post::create([
-            'name' => $request->name,
-            'description' => $request->description,
-        ]);
+        // Post::create([
+        //     'name' => $request->name,
+        //     'description' => $request->description,
+        //     'category_id' => $request->category,
+        // ]);
+
+        $validated =$request->validated();
+        Post::create($validated);
 
         return redirect('/posts');
     }
@@ -57,7 +63,8 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Post $post)
-    {
+    {   
+        $this->authorize('view', $post);
         return view('show', compact('post'));
     }
 
@@ -69,7 +76,11 @@ class HomeController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('edit', compact('post'));
+        $this->authorize('view', $post);
+
+        $categories = Category::all();
+
+        return view('edit', compact('post', 'categories'));
     }
 
     /**
@@ -85,10 +96,14 @@ class HomeController extends Controller
         // $post->description = $request->description;
         // $post->save();
 
-        $post->update([
-            'name' => $request->name,
-            'description' => $request->description,
-        ]);
+        // $post->update([
+        //     'name' => $request->name,
+        //     'description' => $request->description,
+        //     'category_id' => $request->category_id,
+        // ]);
+
+        $validated = $request->validated();
+        $post->update($validated);
 
         return redirect('/posts');
     }

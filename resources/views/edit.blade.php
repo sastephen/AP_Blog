@@ -29,6 +29,19 @@
                             {{ old('description', $post->description) }}
                         </textarea>
                     </div>
+
+                    <div class="form-group">
+                        <select class="form-control" name="category_id" id="">
+                            <option value="">Select Category</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}"
+                                    {{ $category->id == $post->category_id ? 'selected' : '' }}>{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('category')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                     <a href="/posts" class="btn btn-success">Back</a>
                 </form>

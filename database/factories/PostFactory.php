@@ -25,6 +25,7 @@ class PostFactory extends Factory
             'name' => $this->faker->name,
             'description' => $this->faker->paragraph(),
             'category_id' => rand(1,5),
+            'user_id' => rand(1,3),
         ];
     }
 }

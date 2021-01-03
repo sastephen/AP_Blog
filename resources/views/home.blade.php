@@ -4,6 +4,8 @@
     <div class="container">
         <div class="py-2">
             <a href="posts/create" class="btn btn-success">New Post</a>
+            <a href="/logout" class="btn btn-success">LogOut</a>
+            <h4 class="text-success" style="float: right">{{ Auth::user()->name }}</h4>
         </div>
         <div class="card">
         <div class="card-header" style="text-align:center">
