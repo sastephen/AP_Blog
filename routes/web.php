@@ -16,7 +16,11 @@ use App\Http\Controllers\HomeController;
 */
 
 
-// Route::get('/', [HomeController::class, 'index']);
+Route::get('/', function(){
+    return view('welcome');
+});
+
+
 Route::resource('/posts', HomeController::class)->middleware(['auth:sanctum', 'verified']);
 Route::get('/logout', [AuthController::class, 'logout']);
 
